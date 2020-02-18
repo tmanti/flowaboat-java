@@ -1,5 +1,6 @@
 package me.tmanti.flowaboat;
 
+import me.tmanti.flowaboat.command.CommandHandler;
 import me.tmanti.flowaboat.listeners.MessageHandler;
 import me.tmanti.flowaboat.utils.BotSettings;
 import me.tmanti.flowaboat.utils.ServerManager;
@@ -18,6 +19,8 @@ public class Flowaboat {
     private MessageHandler messageHandler;
     private ServerManager serverManager;
 
+    private CommandHandler commandHandler;
+
     public Flowaboat(){
         instance = this;
         this.serverManager =  new ServerManager();
@@ -28,6 +31,9 @@ public class Flowaboat {
         } catch (LoginException e){
             e.printStackTrace();
         }
+
+        commandHandler = new CommandHandler(this);
+        this.registerCommands();
     }
 
     public static Flowaboat getInstance(){
@@ -47,12 +53,20 @@ public class Flowaboat {
         jdaBuilder.addEventListeners(this.messageHandler);
     }
 
+    private void registerCommands(){
+
+    }
+
     public MessageHandler getMessageHandler(){
         return this.messageHandler;
     }
 
     public ServerManager getServerManager(){
         return this.serverManager;
+    }
+
+    public CommandHandler getCommandHandler(){
+        return this.commandHandler;
     }
 
     public BotSettings getSettings(){

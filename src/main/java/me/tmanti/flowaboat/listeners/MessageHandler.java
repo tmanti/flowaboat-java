@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.Arrays;
+
 public class MessageHandler extends ListenerAdapter {
 
     private Flowaboat flowaboat;
@@ -20,7 +22,16 @@ public class MessageHandler extends ListenerAdapter {
         Message msg = event.getMessage();
         if(msg.getContentRaw().startsWith(server.getCommandPrefix())){
             String decodeString = msg.getContentRaw().substring(server.getCommandPrefix().length());
-            System.out.println(decodeString);
+            String[] decode = decodeString.split(" ");
+            String label = decode[0];
+            String[] args;
+            if(decode.length > 1){
+                args = Arrays.copyOfRange(decode, 1, decode.length);
+            } else {
+                args = new String[0];
+            }
+
+            flowaboat.getCommandHandler().dispatch(event, label, args);
         }
     }
 

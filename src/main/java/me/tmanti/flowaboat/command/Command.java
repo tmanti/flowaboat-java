@@ -1,5 +1,8 @@
 package me.tmanti.flowaboat.command;
 
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
 public abstract class Command {
 
     private final String name;
@@ -44,5 +47,7 @@ public abstract class Command {
         this.minArguments = min;
         this.maxArguments = max;
     }
+
+    public abstract boolean execute(MessageReceivedEvent event, String identifier, String[] args);
 
 }

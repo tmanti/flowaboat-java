@@ -1,6 +1,8 @@
 package me.tmanti.flowaboat.command;
 
 import me.tmanti.flowaboat.Flowaboat;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +23,11 @@ public class CommandHandler {
 
     public void addCommand(Command command){
         this.commands.put(command.getName(), command);
-        this.aliases.put(command.getName(), command.getName());
+        this.addAlias(command);
+    }
+
+    private void addAlias(Command command){
+        this.addAlias(command, command.getName());
     }
 
     public void addAlias(Command command, String alias){
@@ -29,15 +35,32 @@ public class CommandHandler {
     }
 
     public Command getCommand(String name){
-        return this.commands.get(name);
+        return this.commands.get(aliases.get(name));
     }
 
     public List<Command> getCommands(){
         return new ArrayList<>(this.commands.values());
     }
 
-    public boolean dispatch(String label, String[] args){
-        return true;
+    public void dispatch(MessageReceivedEvent event, String label, String[] args){
+        Command command = this.getCommand(label);
+        if(command != null){
+            if(command.getMinArguments() <= args.length && args.length <= command.getMaxArguments()) {
+                command.execute(event, label, args);
+            } else {
+                this.getHelp(event, command);
+            }
+        } else{
+            getHelp(event);
+        }
+    }
+
+    public MessageAction getHelp(MessageReceivedEvent event){
+        return event.getChannel().sendMessage("AHHHHH");
+    }
+
+    public MessageAction getHelp(MessageReceivedEvent event, Command command){
+        return event.getChannel().sendMessage(command.getUsage());
     }
 
 }
