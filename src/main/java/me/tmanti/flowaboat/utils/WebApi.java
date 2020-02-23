@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.function.Function;
 
 
 public class WebApi {
@@ -21,14 +22,14 @@ public class WebApi {
 
     OkHttpClient client = new OkHttpClient();
 
-    public WebApi(String base_url, int max_requests_per_minute, HashMap<String, String> params) {
+    public WebApi(String base_url, int max_requests_per_minute, Map<String, String> params) {
         this.url = base_url;
         this.parameters = params;
         this.maxRequests = max_requests_per_minute;
         this.actions = new LinkedList<>();
     }
 
-    private Request compileUrl(String link_extension, HashMap<String, String> params) {
+    private Request compileUrl(String link_extension, Map<String, String> params) {
         HttpUrl.Builder url = HttpUrl.parse(this.url).newBuilder();
         url.addPathSegment(link_extension);
 
@@ -56,7 +57,7 @@ public class WebApi {
     }
 
 
-    public Response get(String url, HashMap<String, String> params) throws IOException, InvalidRequestCount {
+    public Response get(String url, Map<String, String> params) throws IOException, InvalidRequestCount {
         this.clearQueue();
 
         if (this.actions.size() <= this.maxRequests) {
@@ -68,16 +69,23 @@ public class WebApi {
             }
         }
 
-        // TODO: put on idle till there is free requests. for now i just made it throw an error with the clear time
-        long free_in = Math.max(60100 - (System.currentTimeMillis() - this.actions.peek()), 0);
-        // sleep for freetime or v
+        long free_in = this.minWait();
+        //Thread.sleep(free_in);
+        //return this.get(url, params);
         throw new InvalidRequestCount("Too many requests queue will be free in " + free_in / 1000 + "seconds", free_in);
     }
 
+    public boolean usable(){
+        return this.actions.size() <= this.maxRequests;
+    }
+
+    public long minWait(){
+        return Math.max(60100 - (System.currentTimeMillis() - this.actions.peek()), 0);
+    }
 
     // overloading stuff
 
-    public WebApi(String base_url, HashMap<String, String> params) {
+    public WebApi(String base_url, Map<String, String> params) {
         this(base_url, 60, params);
     }
 
@@ -95,7 +103,7 @@ public class WebApi {
         return this.get(url, new HashMap<>());
     }
 
-    public Response get(HashMap<String, String> params) throws IOException, InvalidRequestCount {
+    public Response get(Map<String, String> params) throws IOException, InvalidRequestCount {
         return this.get("", params);
     }
 

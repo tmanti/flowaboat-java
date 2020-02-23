@@ -6,6 +6,7 @@ import me.tmanti.flowaboat.utils.BotSettings;
 import me.tmanti.flowaboat.utils.ServerManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import me.tmanti.flowaboat.utils.osu.OsuApi;
 
 import javax.security.auth.login.LoginException;
 
@@ -32,6 +33,11 @@ public class Flowaboat {
             e.printStackTrace();
         }
 
+        String[] apiKeysThatCameFromJson = {"asdasd","asdasd"}; // temporary todo
+        for (String i : apiKeysThatCameFromJson){
+            OsuApi.addKey(i);
+        }
+
         commandHandler = new CommandHandler(this);
         this.registerCommands();
     }
@@ -54,7 +60,6 @@ public class Flowaboat {
     }
 
     private void registerCommands(){
-
     }
 
     public MessageHandler getMessageHandler(){
