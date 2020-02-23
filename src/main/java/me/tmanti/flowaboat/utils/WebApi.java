@@ -7,11 +7,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.function.Function;
 
 
 public class WebApi {
@@ -19,11 +19,19 @@ public class WebApi {
     public Map<String, String> parameters;
     public int maxRequests;
     private Queue<Long> actions;
+    private Clock clock;
+    public Clock getClock() { return clock; }
+    public void setClock(Clock newClock) { clock = newClock; }
+
+    {
+        setClock(Clock.system(Clock.systemUTC().getZone()));
+    }
 
     OkHttpClient client = new OkHttpClient();
 
     public WebApi(String base_url, int max_requests_per_minute, Map<String, String> params) {
         this.url = base_url;
+        assert HttpUrl.parse(this.url) != null;
         this.parameters = params;
         this.maxRequests = max_requests_per_minute;
         this.actions = new LinkedList<>();
@@ -48,7 +56,7 @@ public class WebApi {
 
     private void clearQueue() {
         while (this.actions.size() > 0) {
-            if ((System.currentTimeMillis() - this.actions.peek()) / 1000 >= 60) {
+            if ((clock.millis() - this.actions.peek()) / 1000 >= 60) {
                 this.actions.remove();
             } else {
                 break;
@@ -57,15 +65,15 @@ public class WebApi {
     }
 
 
-    public Response get(String url, Map<String, String> params) throws IOException, InvalidRequestCount {
+    public ApiResponse get(String url, Map<String, String> params) throws IOException, InvalidRequestCount {
         this.clearQueue();
 
-        if (this.actions.size() <= this.maxRequests) {
-            this.actions.add(System.currentTimeMillis());
+        if (this.usable()) {
+            this.actions.add(clock.millis());
 
             Request request = compileUrl(url, params);
             try (Response response = client.newCall(request).execute()) {
-                return response;
+                return new ApiResponse(response);
             }
         }
 
@@ -76,11 +84,11 @@ public class WebApi {
     }
 
     public boolean usable(){
-        return this.actions.size() <= this.maxRequests;
+        return this.actions.size() < this.maxRequests;
     }
 
     public long minWait(){
-        return Math.max(60100 - (System.currentTimeMillis() - this.actions.peek()), 0);
+        return Math.max(60100 - (clock.millis() - this.actions.peek()), 0);
     }
 
     // overloading stuff
@@ -99,15 +107,15 @@ public class WebApi {
     }
 
 
-    public Response get(String url) throws IOException, InvalidRequestCount {
+    public ApiResponse get(String url) throws IOException, InvalidRequestCount {
         return this.get(url, new HashMap<>());
     }
 
-    public Response get(Map<String, String> params) throws IOException, InvalidRequestCount {
+    public ApiResponse get(Map<String, String> params) throws IOException, InvalidRequestCount {
         return this.get("", params);
     }
 
-    public Response get() throws IOException, InvalidRequestCount {
+    public ApiResponse get() throws IOException, InvalidRequestCount {
         return this.get("");
     }
 }

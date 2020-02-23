@@ -3,6 +3,7 @@ package me.tmanti.flowaboat.utils.osu;
 import me.tmanti.flowaboat.errors.osu.NoLeaderBoard;
 import me.tmanti.flowaboat.errors.osu.NoPlays;
 import me.tmanti.flowaboat.errors.web.InvalidRequestCount;
+import me.tmanti.flowaboat.utils.ApiResponse;
 import me.tmanti.flowaboat.utils.WebApi;
 import me.tmanti.flowaboat.errors.osu.UserNonexistent;
 import me.tmanti.flowaboat.utils.osu.types.osuPlay;
@@ -45,7 +46,7 @@ public class OsuApi {
     }
 
 
-    private static Response get(String url, Map<String, String> params) throws InterruptedException, IOException {
+    private static ApiResponse get(String url, Map<String, String> params) throws InterruptedException, IOException {
         try {
             return getApi().get(url, params);
         } catch (InvalidRequestCount e) {
@@ -66,8 +67,8 @@ public class OsuApi {
     }
 
 
-    private static boolean nullResponse(Response response) throws IOException {
-        return (!response.isSuccessful() || response.body() == null || response.body().string().equals("[]"));
+    private static boolean nullResponse(ApiResponse response) throws IOException {
+        return (!response.isSuccessful() || response.body() == null || response.getContent().equals("[]"));
     }
 
 
@@ -77,12 +78,12 @@ public class OsuApi {
         Map<String, String> parameters = new HashMap<String, String>() {{
             put("u", user);
         }};
-        Response response = get("get_user", parameters);
+        ApiResponse response = get("get_user", parameters);
 
         if (nullResponse(response))
             throw new UserNonexistent("Couldn't find user: " + user);
 
-        JSONArray users = (JSONArray) new JSONParser().parse(response.body().string());
+        JSONArray users = (JSONArray) new JSONParser().parse(response.getContent());
 
         osuUser[] userObjs = new osuUser[users.size()];
 
@@ -98,12 +99,12 @@ public class OsuApi {
             put("b", String.valueOf(beatmap_id));
             put("limit", String.valueOf(limit));
         }};
-        Response response = get("get_scores", parameters);
+        ApiResponse response = get("get_scores", parameters);
 
         if (nullResponse(response))
             throw new NoLeaderBoard("Couldn't find leaderboard for this beatmap");
 
-        return jsonToPlays((JSONArray) new JSONParser().parse(response.body().string()), beatmap_id);
+        return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()), beatmap_id);
     }
 
 
@@ -114,12 +115,12 @@ public class OsuApi {
             put("mods", String.valueOf(enabled_mods));
         }};
 
-        Response response = get("get_scores", parameters);
+        ApiResponse response = get("get_scores", parameters);
 
         if (nullResponse(response))
             throw new NoPlays("No top plays on this map found for " + user);
 
-        return jsonToPlays((JSONArray) new JSONParser().parse(response.body().string()), beatmap_id);
+        return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()), beatmap_id);
     }
 
     public static osuPlay[] get_user_best(String user, int limit) throws NoPlays, IOException, InterruptedException, ParseException {
@@ -128,12 +129,12 @@ public class OsuApi {
             put("limit", String.valueOf(limit));
         }};
 
-        Response response = get("get_user_best", parameters);
+        ApiResponse response = get("get_user_best", parameters);
 
         if (nullResponse(response))
             throw new NoPlays("No top plays found for " + user);
 
-        return jsonToPlays((JSONArray) new JSONParser().parse(response.body().string()));
+        return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()));
     }
 
     public static osuPlay[] get_user_recent(String user, int limit) throws NoPlays, IOException, InterruptedException, ParseException {
@@ -142,12 +143,12 @@ public class OsuApi {
             put("limit", String.valueOf(limit));
         }};
 
-        Response response = get("get_user_recent", parameters);
+        ApiResponse response = get("get_user_recent", parameters);
 
         if (nullResponse(response))
             throw new NoPlays("No recent plays found for " + user);
 
-        return jsonToPlays((JSONArray) new JSONParser().parse(response.body().string()));
+        return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()));
     }
 
     public static String get_replay(int beatmap_id, int user_id, int mods, int mode) throws IOException, InterruptedException, NoPlays, ParseException {
@@ -158,12 +159,12 @@ public class OsuApi {
             put("m", String.valueOf(mode));
         }};
 
-        Response response = get("get_replay", parameters);
+        ApiResponse response = get("get_replay", parameters);
 
         if (nullResponse(response))
             throw new NoPlays("Could not find replay for this user");
 
-        JSONObject json = (JSONObject) new JSONParser().parse(response.body().string());
+        JSONObject json = (JSONObject) new JSONParser().parse(response.getContent());
 
         return (String) json.get("content");
     }
