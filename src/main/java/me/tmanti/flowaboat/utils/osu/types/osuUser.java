@@ -2,14 +2,13 @@ package me.tmanti.flowaboat.utils.osu.types;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class osuUser {
-    private final SimpleDateFormat osuDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static SimpleDateFormat osuDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public int user_id, pp_rank, pp_raw, count_rank_ss, count_rank_ssh, count_rank_s, count_rank_sh, count_rank_a,
             pp_country_rank;
     public long count300, count100, count50, playcount, ranked_score, total_score, total_seconds_played;
