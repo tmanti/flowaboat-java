@@ -20,8 +20,14 @@ public class WebApi {
     public int maxRequests;
     private Queue<Long> actions;
     private Clock clock;
-    public Clock getClock() { return clock; }
-    public void setClock(Clock newClock) { clock = newClock; }
+
+    public Clock getClock() {
+        return clock;
+    }
+
+    public void setClock(Clock newClock) {
+        clock = newClock;
+    }
 
     {
         setClock(Clock.system(Clock.systemUTC().getZone()));
@@ -83,11 +89,11 @@ public class WebApi {
         throw new InvalidRequestCount("Too many requests queue will be free in " + free_in / 1000 + "seconds", free_in);
     }
 
-    public boolean usable(){
+    public boolean usable() {
         return this.actions.size() < this.maxRequests;
     }
 
-    public long minWait(){
+    public long minWait() {
         return Math.max(60100 - (clock.millis() - this.actions.peek()), 0);
     }
 

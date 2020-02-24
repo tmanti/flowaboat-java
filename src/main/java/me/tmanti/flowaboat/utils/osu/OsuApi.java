@@ -2,13 +2,15 @@ package me.tmanti.flowaboat.utils.osu;
 
 import me.tmanti.flowaboat.errors.osu.NoLeaderBoard;
 import me.tmanti.flowaboat.errors.osu.NoPlays;
+import me.tmanti.flowaboat.errors.osu.UserNonexistent;
 import me.tmanti.flowaboat.errors.web.InvalidRequestCount;
+
 import me.tmanti.flowaboat.utils.ApiResponse;
 import me.tmanti.flowaboat.utils.WebApi;
-import me.tmanti.flowaboat.errors.osu.UserNonexistent;
+import me.tmanti.flowaboat.utils.osu.types.osuMods;
 import me.tmanti.flowaboat.utils.osu.types.osuPlay;
 import me.tmanti.flowaboat.utils.osu.types.osuUser;
-import okhttp3.Response;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -108,7 +110,7 @@ public class OsuApi {
     }
 
 
-    public static osuPlay[] get_user_map_best(int beatmap_id, String user, int enabled_mods) throws IOException, InterruptedException, ParseException, NoPlays {
+    public static osuPlay[] get_user_map_best(int beatmap_id, String user, osuMods enabled_mods) throws IOException, InterruptedException, ParseException, NoPlays {
         Map<String, String> parameters = new HashMap<String, String>() {{
             put("b", String.valueOf(beatmap_id));
             put("u", user);
@@ -151,7 +153,7 @@ public class OsuApi {
         return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()));
     }
 
-    public static String get_replay(int beatmap_id, int user_id, int mods, int mode) throws IOException, InterruptedException, NoPlays, ParseException {
+    public static String get_replay(int beatmap_id, int user_id, osuMods mods, int mode) throws IOException, InterruptedException, NoPlays, ParseException {
         Map<String, String> parameters = new HashMap<String, String>() {{
             put("b", String.valueOf(beatmap_id));
             put("u", String.valueOf(user_id));
@@ -213,7 +215,7 @@ public class OsuApi {
     }
 
     public static osuPlay[] get_user_map_best(int beatmap_id, String user) throws InterruptedException, ParseException, IOException, NoPlays {
-        return get_user_map_best(beatmap_id, user, 0);
+        return get_user_map_best(beatmap_id, user, new osuMods());
     }
 
     public static osuPlay[] get_user_best(String user) throws InterruptedException, NoPlays, ParseException, IOException {
@@ -224,7 +226,7 @@ public class OsuApi {
         return get_user_recent(user, 10);
     }
 
-    public static String get_replay(int beatmap_id, int user_id, int mods) throws IOException, InterruptedException, NoPlays, ParseException {
+    public static String get_replay(int beatmap_id, int user_id, osuMods mods) throws IOException, InterruptedException, NoPlays, ParseException {
         return get_replay(beatmap_id, user_id, mods, 0);
     }
 

@@ -18,12 +18,12 @@ public class WebApiTests {
     private WebApi webApi;
 
     @Before
-    public void setUp(){
-        webApi = new WebApi("https://www.cscenter.ca",4);
+    public void setUp() {
+        webApi = new WebApi("https://www.cscenter.ca", 4);
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         webApi.setClock(Clock.system(Clock.systemUTC().getZone()));
         webApi = null;
     }
@@ -44,12 +44,12 @@ public class WebApiTests {
     }
 
     @Test
-    public void usableTrue(){
+    public void usableTrue() {
         final boolean expected = true;
 
         final boolean actual = webApi.usable();
 
-        Assert.assertEquals(expected,actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class WebApiTests {
         webApi.get("robots.txt");
         final boolean actual = webApi.usable();
 
-        Assert.assertEquals(expected,actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test(expected = InvalidRequestCount.class)

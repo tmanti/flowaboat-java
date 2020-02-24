@@ -8,8 +8,9 @@ import java.util.Date;
 
 public class osuPlay {
     private final static SimpleDateFormat osuDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public int score_id, score, count300, count100, count50, countmiss, maxcombo, countkatu, countgeki, enabled_mods, user_id, beatmap_id;
+    public int score_id, score, count300, count100, count50, countmiss, maxcombo, countkatu, countgeki, user_id, beatmap_id;
     public boolean perfect, replay_available;
+    public osuMods enabled_mods;
     public String username, rank;
     public Date date;
     public float pp;
@@ -31,7 +32,7 @@ public class osuPlay {
         this.countkatu = Integer.parseInt(countkatu);
         this.countgeki = Integer.parseInt(countgeki);
         this.perfect = Integer.parseInt(perfect) == 1;
-        this.enabled_mods = Integer.parseInt(enabled_mods);  // bitwise flag representation of mods used. see reference todo change to a mods object
+        this.enabled_mods = new osuMods(Integer.parseInt(enabled_mods));
         this.user_id = Integer.parseInt(user_id);
         try {
             this.date = osuDate.parse(date);
