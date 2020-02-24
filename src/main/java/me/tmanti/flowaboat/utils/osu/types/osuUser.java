@@ -9,10 +9,10 @@ import java.util.Date;
 
 public class osuUser {
     private final static SimpleDateFormat osuDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public int user_id, pp_rank, pp_raw, count_rank_ss, count_rank_ssh, count_rank_s, count_rank_sh, count_rank_a,
+    public int user_id, pp_rank, count_rank_ss, count_rank_ssh, count_rank_s, count_rank_sh, count_rank_a,
             pp_country_rank;
     public long count300, count100, count50, playcount, ranked_score, total_score, total_seconds_played;
-    public float level, accuracy;
+    public float level, accuracy, pp_raw;
     public Date join_date;
     public String username, country;
     public Event[] events;
@@ -38,7 +38,7 @@ public class osuUser {
         this.total_score = Long.parseLong(total_score);    // Counts every score on ranked, approved, and loved beatmaps
         this.pp_rank = Integer.parseInt(pp_rank);
         this.level = Float.parseFloat(level);
-        this.pp_raw = Integer.parseInt(pp_raw);   // For inactive players this will be 0 to purge them from leaderboards
+        this.pp_raw = Float.parseFloat(pp_raw);   // For inactive players this will be 0 to purge them from leaderboards
         this.accuracy = Float.parseFloat(accuracy);
 
         this.count_rank_ss = Integer.parseInt(count_rank_ss);

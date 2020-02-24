@@ -8,7 +8,8 @@ import java.util.Date;
 
 public class osuPlay {
     private final static SimpleDateFormat osuDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public int score_id, score, count300, count100, count50, countmiss, maxcombo, countkatu, countgeki, user_id, beatmap_id;
+    public int score, count300, count100, count50, countmiss, maxcombo, countkatu, countgeki;
+    public long score_id, user_id, beatmap_id;
     public boolean perfect, replay_available;
     public osuMods enabled_mods;
     public String username, rank;
@@ -21,7 +22,7 @@ public class osuPlay {
                    String enabled_mods, String user_id, String date, String rank, String pp, String replay_available,
                    String beatmap_id) {
 
-        this.score_id = Integer.parseInt(score_id);
+        this.score_id = Long.parseLong(score_id);
         this.username = username;
         this.score = Integer.parseInt(score);
         this.count300 = Integer.parseInt(count300);
@@ -33,7 +34,7 @@ public class osuPlay {
         this.countgeki = Integer.parseInt(countgeki);
         this.perfect = Integer.parseInt(perfect) == 1;
         this.enabled_mods = new osuMods(Integer.parseInt(enabled_mods));
-        this.user_id = Integer.parseInt(user_id);
+        this.user_id = Long.parseLong(user_id);
         try {
             this.date = osuDate.parse(date);
         } catch (java.text.ParseException e) {
@@ -42,7 +43,7 @@ public class osuPlay {
         this.rank = rank;
         this.pp = Float.parseFloat(pp);
         this.replay_available = Integer.parseInt(replay_available) == 1;
-        this.beatmap_id = Integer.parseInt(beatmap_id);
+        this.beatmap_id = Long.parseLong(beatmap_id);
     }
 
     public static osuPlay proccessJson(JSONObject json_object) {
