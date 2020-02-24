@@ -9,7 +9,7 @@ public class osuMods {
     private static final String[] DIFF_MODS = new String[]{"HR", "EZ", "DT", "HT", "NC", "FL", "HD", "NF"};
     private static final String[] TIME_MODS = new String[]{"DT", "HT", "NC"};
     private static final Map<String, Long> MOD_FLAGS = new HashMap<String, Long>() {{
-        put("NF", 1L << 0);
+        put("NF", 1L);
         put("EZ", 1L << 1);
         put("TD", 1L << 2);
         put("HD", 1L << 3);
@@ -101,7 +101,7 @@ public class osuMods {
     }
 
     public String getModString() {
-        this.modFlag = this.sanatize(this.modFlag);
+        this.modFlag = this.sanitize(this.modFlag);
         StringBuilder string = new StringBuilder();
         for (Long i : MOD_FLAGS_INV.keySet()) if (this.contains(i)) string.append(MOD_FLAGS_INV.get(i));
         this.modFlag = this.addMissing(this.modFlag);
@@ -130,7 +130,7 @@ public class osuMods {
         return modInt;
     }
 
-    private long sanatize(Long modInt) {
+    private long sanitize(Long modInt) {
         if (this.contains("NC") && this.contains("DT")) modInt -= getModInt("DT");
         if (this.contains("PF") && this.contains("SD")) modInt -= getModInt("SD");
         return modInt;
@@ -185,6 +185,6 @@ public class osuMods {
 
         osuMods c = (osuMods) o;
 
-        return this.modFlag == c.modFlag;
+        return this.modFlag.equals(c.modFlag);
     }
 }

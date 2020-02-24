@@ -123,7 +123,7 @@ public class OsuApi {
         return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()), beatmap_id);
     }
 
-    public static osuPlay[] get_user_best(String user, int limit) throws NoPlays, IOException, InterruptedException, ParseException {
+    private static osuPlay[] get_user_best(String user, int limit) throws NoPlays, IOException, InterruptedException, ParseException {
         Map<String, String> parameters = new HashMap<String, String>() {{
             put("u", user);
             put("limit", String.valueOf(limit));
@@ -137,7 +137,7 @@ public class OsuApi {
         return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()));
     }
 
-    public static osuPlay[] get_user_recent(String user, int limit) throws NoPlays, IOException, InterruptedException, ParseException {
+    private static osuPlay[] get_user_recent(String user, int limit) throws NoPlays, IOException, InterruptedException, ParseException {
         Map<String, String> parameters = new HashMap<String, String>() {{
             put("u", user);
             put("limit", String.valueOf(limit));
@@ -151,14 +151,7 @@ public class OsuApi {
         return jsonToPlays((JSONArray) new JSONParser().parse(response.getContent()));
     }
 
-    public static String get_replay(int beatmap_id, int user_id, osuMods mods, int mode) throws IOException, InterruptedException, NoPlays, ParseException {
-        Map<String, String> parameters = new HashMap<String, String>() {{
-            put("b", String.valueOf(beatmap_id));
-            put("u", String.valueOf(user_id));
-            put("mods", String.valueOf(mods));
-            put("m", String.valueOf(mode));
-        }};
-
+    private static String getReplay(Map<String,String> parameters) throws IOException, InterruptedException, NoPlays, ParseException {
         ApiResponse response = get("get_replay", parameters);
 
         if (nullResponse(response))
@@ -167,6 +160,30 @@ public class OsuApi {
         JSONObject json = (JSONObject) new JSONParser().parse(response.getContent());
 
         return (String) json.get("content");
+    }
+
+    public static String get_replay(int beatmap_id, int user_id, osuMods mods, int mode) throws IOException, InterruptedException, NoPlays, ParseException {
+        Map<String, String> parameters = new HashMap<String, String>() {{
+            put("b", String.valueOf(beatmap_id));
+            put("u", String.valueOf(user_id));
+            put("mods", String.valueOf(mods));
+            put("m", String.valueOf(mode));
+            put("type", "id");
+        }};
+
+        return getReplay(parameters);
+    }
+
+    public static String get_replay(int beatmap_id, String user_id, osuMods mods, int mode) throws IOException, InterruptedException, NoPlays, ParseException {
+        Map<String, String> parameters = new HashMap<String, String>() {{
+            put("b", String.valueOf(beatmap_id));
+            put("u", user_id);
+            put("mods", String.valueOf(mods));
+            put("m", String.valueOf(mode));
+            put("type", "string");
+        }};
+
+        return getReplay(parameters);
     }
 
     public static osuPlay get_top(String user, int index, boolean rb, boolean ob) throws InterruptedException, NoPlays, ParseException, IOException {
@@ -216,15 +233,19 @@ public class OsuApi {
         return get_user_map_best(beatmap_id, user, new osuMods());
     }
 
-    public static osuPlay[] get_user_best(String user) throws InterruptedException, NoPlays, ParseException, IOException {
-        return get_user_best(user, 100);
-    }
+//    public static osuPlay[] get_user_best(String user) throws InterruptedException, NoPlays, ParseException, IOException {
+//        return get_user_best(user, 100);
+//    }
 
-    public static osuPlay[] get_user_recent(String user) throws NoPlays, IOException, InterruptedException, ParseException {
-        return get_user_recent(user, 10);
-    }
+//    public static osuPlay[] get_user_recent(String user) throws NoPlays, IOException, InterruptedException, ParseException {
+//        return get_user_recent(user, 10);
+//    }
 
     public static String get_replay(int beatmap_id, int user_id, osuMods mods) throws IOException, InterruptedException, NoPlays, ParseException {
+        return get_replay(beatmap_id, user_id, mods, 0);
+    }
+
+    public static String get_replay(int beatmap_id, String user_id, osuMods mods) throws IOException, InterruptedException, NoPlays, ParseException {
         return get_replay(beatmap_id, user_id, mods, 0);
     }
 
