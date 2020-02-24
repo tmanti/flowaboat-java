@@ -49,6 +49,7 @@ public class osuMods {
     public Long modFlag;
 
     public osuMods(Long mods) {
+        this.modFlag = mods;
         this.modFlag = addMissing(mods);
     }
 
@@ -100,8 +101,10 @@ public class osuMods {
     }
 
     public String getModString() {
+        this.modFlag = this.sanatize(this.modFlag);
         StringBuilder string = new StringBuilder();
-        for (Long i : MOD_FLAGS_INV.keySet()) if ((this.modFlag & i) != 0) string.append(MOD_FLAGS_INV.get(i));
+        for (Long i : MOD_FLAGS_INV.keySet()) if (this.contains(i)) string.append(MOD_FLAGS_INV.get(i));
+        this.modFlag = this.addMissing(this.modFlag);
         return string.toString();
     }
 
@@ -110,11 +113,13 @@ public class osuMods {
     }
 
     public boolean contains(String mod) {
-        return (this.modFlag & getModInt(mod)) != 0;
+        return this.contains(getModInt(mod));
     }
+
     public boolean contains(long mod) {
         return (this.modFlag & mod) != 0;
     }
+
     public boolean contains(int mod) {
         return this.contains((long) mod);
     }
@@ -125,15 +130,24 @@ public class osuMods {
         return modInt;
     }
 
+    private long sanatize(Long modInt) {
+        if (this.contains("NC") && this.contains("DT")) modInt -= getModInt("DT");
+        if (this.contains("PF") && this.contains("SD")) modInt -= getModInt("SD");
+        return modInt;
+    }
+
     public void add(String mods) {
         this.add(getModInt(mods));
     }
+
     public void add(int mods) {
         this.add((long) mods);
     }
+
     public void add(osuMods mods) {
         this.add(mods.getBitWiseFlag());
     }
+
     public void add(long mods) {
         this.modFlag = addMissing(this.modFlag | mods);
     }
@@ -141,12 +155,15 @@ public class osuMods {
     public void remove(String mods) {
         this.remove(getModInt(mods));
     }
+
     public void remove(int mods) {
         this.remove((long) mods);
     }
+
     public void remove(osuMods mods) {
         this.remove(mods.getBitWiseFlag());
     }
+
     public void remove(long mods) {
         this.modFlag = addMissing((this.modFlag & ~mods));
     }

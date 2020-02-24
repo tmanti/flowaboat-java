@@ -36,5 +36,31 @@ public class modTypeTests {
         List<String> expectations = Arrays.asList("HDHR", "HRHD");
         osuMods actual = new osuMods(osuMods.getModInt("HD") + osuMods.getModInt("HR"));
         Assert.assertTrue(expectations.contains(actual.getModString()));
+
+        Assert.assertEquals("PF", osuMods.fromString("PF").getModString());
+    }
+
+    @Test
+    public void addAndSubtract() {
+        osuMods original = new osuMods(65);
+        original.remove(1);
+        original.remove(new osuMods(32));
+        Assert.assertEquals(original, new osuMods(64));
+
+        original = new osuMods(1);
+        original.add(32);
+        Assert.assertEquals(original, new osuMods(33));
+    }
+
+    @Test
+    public void missingMods() {
+        osuMods Nightcore = new osuMods(osuMods.getModInt("NC"));
+        osuMods Perfect = new osuMods(osuMods.getModInt("PF"));
+
+        long NCDT = osuMods.getModInt("NC") + osuMods.getModInt("DT");
+        long PFSD = osuMods.getModInt("PF") + osuMods.getModInt("SD");
+
+        Assert.assertEquals(NCDT, (long) Nightcore.getBitWiseFlag());
+        Assert.assertEquals(PFSD, (long) Perfect.getBitWiseFlag());
     }
 }
