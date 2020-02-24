@@ -17,6 +17,10 @@ import java.time.Instant;
 public class WebApiTests {
     private WebApi webApi;
 
+    public static String readFileAsString(String fileName) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(fileName)));
+    }
+
     @Before
     public void setUp() {
         webApi = new WebApi("https://www.cscenter.ca", 4);
@@ -26,12 +30,6 @@ public class WebApiTests {
     public void tearDown() {
         webApi.setClock(Clock.system(Clock.systemUTC().getZone()));
         webApi = null;
-    }
-
-    public static String readFileAsString(String fileName) throws IOException {
-        String data = "";
-        data = new String(Files.readAllBytes(Paths.get(fileName)));
-        return data;
     }
 
     @Test

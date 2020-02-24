@@ -17,24 +17,6 @@ public class osuUser {
     public String username, country;
     public Event[] events;
 
-    private class Event {
-        public String display_html;
-        public int beatmap_id, beatmapset_id, epicfactor;
-        public Date date;
-
-        public Event(String display_html, String beatmap_id, String beatmapset_id, String date, String epicfactor) {
-            this.display_html = display_html;
-            this.beatmap_id = Integer.parseInt(beatmap_id);
-            this.beatmapset_id = Integer.parseInt(beatmapset_id);
-            try {
-                this.date = osuDate.parse(date);  // In UTC
-            } catch (ParseException e) {
-                this.date = new Date(0);
-            }
-            this.epicfactor = Integer.parseInt(epicfactor); // How "epic" this event is (between 1 and 32)
-        }
-    }
-
     public osuUser(String user_id, String username, String join_date, String count300, String count100, String count50,
                    String playcount, String ranked_score, String total_score, String pp_rank, String level,
                    String pp_raw, String accuracy, String count_rank_ss, String count_rank_ssh, String count_rank_s,
@@ -89,5 +71,23 @@ public class osuUser {
                 (String) json_object.get("count_rank_sh"), (String) json_object.get("count_rank_a"),
                 (String) json_object.get("country"), (String) json_object.get("total_seconds_played"),
                 (String) json_object.get("pp_country_rank"), (JSONArray) json_object.get("events"));
+    }
+
+    private class Event {
+        public String display_html;
+        public int beatmap_id, beatmapset_id, epicfactor;
+        public Date date;
+
+        public Event(String display_html, String beatmap_id, String beatmapset_id, String date, String epicfactor) {
+            this.display_html = display_html;
+            this.beatmap_id = Integer.parseInt(beatmap_id);
+            this.beatmapset_id = Integer.parseInt(beatmapset_id);
+            try {
+                this.date = osuDate.parse(date);  // In UTC
+            } catch (ParseException e) {
+                this.date = new Date(0);
+            }
+            this.epicfactor = Integer.parseInt(epicfactor); // How "epic" this event is (between 1 and 32)
+        }
     }
 }

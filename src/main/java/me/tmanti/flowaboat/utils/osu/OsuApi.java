@@ -4,13 +4,11 @@ import me.tmanti.flowaboat.errors.osu.NoLeaderBoard;
 import me.tmanti.flowaboat.errors.osu.NoPlays;
 import me.tmanti.flowaboat.errors.osu.UserNonexistent;
 import me.tmanti.flowaboat.errors.web.InvalidRequestCount;
-
 import me.tmanti.flowaboat.utils.ApiResponse;
 import me.tmanti.flowaboat.utils.WebApi;
 import me.tmanti.flowaboat.utils.osu.types.osuMods;
 import me.tmanti.flowaboat.utils.osu.types.osuPlay;
 import me.tmanti.flowaboat.utils.osu.types.osuUser;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -69,7 +67,7 @@ public class OsuApi {
     }
 
 
-    private static boolean nullResponse(ApiResponse response) throws IOException {
+    private static boolean nullResponse(ApiResponse response) {
         return (!response.isSuccessful() || response.body() == null || response.getContent().equals("[]"));
     }
 

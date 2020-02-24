@@ -18,22 +18,13 @@ public class WebApi {
     public String url;
     public Map<String, String> parameters;
     public int maxRequests;
+    OkHttpClient client = new OkHttpClient();
     private Queue<Long> actions;
     private Clock clock;
-
-    public Clock getClock() {
-        return clock;
-    }
-
-    public void setClock(Clock newClock) {
-        clock = newClock;
-    }
 
     {
         setClock(Clock.system(Clock.systemUTC().getZone()));
     }
-
-    OkHttpClient client = new OkHttpClient();
 
     public WebApi(String base_url, int max_requests_per_minute, Map<String, String> params) {
         this.url = base_url;
@@ -41,6 +32,27 @@ public class WebApi {
         this.parameters = params;
         this.maxRequests = max_requests_per_minute;
         this.actions = new LinkedList<>();
+    }
+
+    public WebApi(String base_url, Map<String, String> params) {
+        this(base_url, 60, params);
+    }
+
+    public WebApi(String base_url) {
+        this(base_url, new HashMap<>());
+    }
+
+    public WebApi(String base_url, int max_requests_per_minute) {
+        this(base_url);
+        this.maxRequests = max_requests_per_minute;
+    }
+
+    public Clock getClock() {
+        return clock;
+    }
+
+    public void setClock(Clock newClock) {
+        clock = newClock;
     }
 
     private Request compileUrl(String link_extension, Map<String, String> params) {
@@ -59,7 +71,6 @@ public class WebApi {
         return new Request.Builder().url(url.build()).build();
     }
 
-
     private void clearQueue() {
         while (this.actions.size() > 0) {
             if ((clock.millis() - this.actions.peek()) / 1000 >= 60) {
@@ -70,6 +81,7 @@ public class WebApi {
         }
     }
 
+    // overloading stuff
 
     public ApiResponse get(String url, Map<String, String> params) throws IOException, InvalidRequestCount {
         this.clearQueue();
@@ -96,22 +108,6 @@ public class WebApi {
     public long minWait() {
         return Math.max(60100 - (clock.millis() - this.actions.peek()), 0);
     }
-
-    // overloading stuff
-
-    public WebApi(String base_url, Map<String, String> params) {
-        this(base_url, 60, params);
-    }
-
-    public WebApi(String base_url) {
-        this(base_url, new HashMap<>());
-    }
-
-    public WebApi(String base_url, int max_requests_per_minute) {
-        this(base_url);
-        this.maxRequests = max_requests_per_minute;
-    }
-
 
     public ApiResponse get(String url) throws IOException, InvalidRequestCount {
         return this.get(url, new HashMap<>());

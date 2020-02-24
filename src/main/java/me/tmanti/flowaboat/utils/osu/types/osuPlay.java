@@ -19,7 +19,7 @@ public class osuPlay {
     public osuPlay(String score_id, String score, String username, String count300, String count100, String count50,
                    String countmiss, String maxcombo, String countkatu, String countgeki, String perfect,
                    String enabled_mods, String user_id, String date, String rank, String pp, String replay_available,
-                   String beatmap_id){
+                   String beatmap_id) {
 
         this.score_id = Integer.parseInt(score_id);
         this.username = username;
@@ -59,6 +59,9 @@ public class osuPlay {
                 (String) json_object.getOrDefault("beatmap_id", "0"));
     }
 
+    public static int compareDates(osuPlay a, osuPlay b) {
+        return a.date.compareTo(b.date);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -70,9 +73,5 @@ public class osuPlay {
         osuPlay c = (osuPlay) o;
 
         return date == c.date && user_id == c.user_id;
-    }
-
-    public static int compareDates(osuPlay a , osuPlay b) {
-        return a.date.compareTo(b.date);
     }
 }
