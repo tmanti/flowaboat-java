@@ -7,17 +7,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Instant;
 
 public class WebApiTests {
     private WebApi webApi;
 
-    public static String readFileAsString(String fileName) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(fileName)));
-    }
+//    public static String readFileAsString(String fileName) throws IOException {
+//        return new String(Files.readAllBytes(Paths.get(fileName)));
+//    }
 
     @Before
     public void setUp() {
@@ -33,8 +33,15 @@ public class WebApiTests {
     @Test
     public void getTest() throws IOException, InvalidRequestCount {
         ApiResponse response = webApi.get("robots.txt");
-        String expected = readFileAsString("tests/robots.txt");
+//        String expected = readFileAsString("tests/robots.txt");
+        String expected = "User-Agent: *\n\r" +
+                "Disallow: ";
         String actual = response.getContent();
+
+        String lines="//Newline//";
+
+        actual = actual.replaceAll("\n", lines).replaceAll("\r", lines);
+        expected = expected.replaceAll("\n", lines).replaceAll("\r", lines);
 
         Assert.assertEquals(expected, actual);
     }
