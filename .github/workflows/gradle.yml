@@ -19,3 +19,8 @@ jobs:
       run: ./gradlew build
       env:
         osu_key: ${{ secrets.osu_key }}
+    - name: Test with Gradle  (in case tests dident run)
+      run: ./gradlew test
+      env:
+        osu_key: ${{ secrets.osu_key }}
+      
