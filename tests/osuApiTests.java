@@ -15,7 +15,7 @@ import java.io.IOException;
 public class osuApiTests {
     @BeforeClass
     public static void setUp() {
-        Assert.assertNotNull(System.getenv("osu_key"));
+        Assert.assertNotNull("no api key", System.getenv("osu_key"));
         OsuApi.addKey(System.getenv("osu_key"));
     }
 
