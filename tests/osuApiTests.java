@@ -1,5 +1,3 @@
-package me.tmanti.flowaboat.tests;
-
 import me.tmanti.flowaboat.errors.osu.NoLeaderBoard;
 import me.tmanti.flowaboat.errors.osu.NoPlays;
 import me.tmanti.flowaboat.errors.osu.UserNonexistent;

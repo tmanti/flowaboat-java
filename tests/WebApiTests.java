@@ -1,5 +1,3 @@
-package me.tmanti.flowaboat.tests;
-
 import me.tmanti.flowaboat.errors.web.InvalidRequestCount;
 import me.tmanti.flowaboat.utils.ApiResponse;
 import me.tmanti.flowaboat.utils.WebApi;
@@ -35,7 +33,7 @@ public class WebApiTests {
     @Test
     public void getTest() throws IOException, InvalidRequestCount {
         ApiResponse response = webApi.get("robots.txt");
-        String expected = readFileAsString("src/main/java/me/tmanti/flowaboat/tests/robots.txt");
+        String expected = readFileAsString("tests/robots.txt");
         String actual = response.getContent();
 
         Assert.assertEquals(expected, actual);

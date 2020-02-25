@@ -1,5 +1,3 @@
-package me.tmanti.flowaboat.tests;
-
 import me.tmanti.flowaboat.utils.osu.types.osuMods;
 import org.junit.Assert;
 import org.junit.Test;
