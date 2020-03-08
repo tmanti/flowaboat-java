@@ -18,6 +18,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test
       - name: Test with Gradle
-        run: ./gradlew test
+        run: ./gradlew test -info
         env:
           osu_key: ${{ secrets.osu_key }}
