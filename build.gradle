@@ -1,3 +1,4 @@
+//https://github.com/DV8FromTheWorld/JDA/wiki/3)-Getting-Started
 plugins {
     id 'java'
 }
@@ -6,13 +7,29 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+def jdaVersion = '4.1.1_108'
 
 repositories {
     jcenter()
     mavenCentral()
 }
 
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['tests']
+        }
+    }
+}
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'net.dv8tion:JDA:4.1.1_108'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    compile group: 'junit', name: 'junit', version: '4.12'
+    compile "net.dv8tion:JDA:$jdaVersion"
 }
